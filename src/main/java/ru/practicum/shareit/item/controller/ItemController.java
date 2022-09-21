@@ -19,31 +19,31 @@ import java.util.List;
 @RestController
 @RequestMapping("/items")
 @AllArgsConstructor
-@FieldDefaults (level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemController {
 
     ItemService itemService;
 
     @PostMapping
-    public ItemDto createItem (@Valid @RequestBody ItemDto item,
-                               @RequestHeader (value = "X-Sharer-User-Id", defaultValue = "0") int ownerId) {
+    public ItemDto createItem(@Valid @RequestBody ItemDto item,
+                              @RequestHeader(value = "X-Sharer-User-Id", defaultValue = "0") int ownerId) {
         return itemService.createItem(item, ownerId);
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto updateItem (@RequestBody ItemDto item,
-                               @RequestHeader (value = "X-Sharer-User-Id", defaultValue = "0") int ownerId,
-                               @PathVariable int itemId){
+    public ItemDto updateItem(@RequestBody ItemDto item,
+                              @RequestHeader(value = "X-Sharer-User-Id", defaultValue = "0") int ownerId,
+                              @PathVariable int itemId) {
         return itemService.updateItem(item, ownerId, itemId);
     }
 
-    @GetMapping ("/{itemId}")
-    public ItemDto getItemById (@PathVariable int itemId) {
+    @GetMapping("/{itemId}")
+    public ItemDto getItemById(@PathVariable int itemId) {
         return itemService.getItemById(itemId);
     }
 
     @GetMapping
-    public List<ItemDto> getItemsOfUser(@RequestHeader (value = "X-Sharer-User-Id", defaultValue = "0") int ownerId) {
+    public List<ItemDto> getItemsOfUser(@RequestHeader(value = "X-Sharer-User-Id", defaultValue = "0") int ownerId) {
         return itemService.getItemsOfUser(ownerId);
     }
 

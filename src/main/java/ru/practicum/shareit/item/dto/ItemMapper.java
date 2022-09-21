@@ -9,12 +9,12 @@ import ru.practicum.shareit.item.model.Item;
 /**
  * TODO Sprint add-item-requests.
  */
-@FieldDefaults (level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
 @Builder
 public class ItemMapper {
 
-    public static ItemDto toItemDto (Item item) {
+    public static ItemDto toItemDto(Item item) {
         return ItemDto.builder()
                 .id(item.getId())
                 .name(item.getName())
@@ -25,7 +25,7 @@ public class ItemMapper {
                 .build();
     }
 
-    public static Item toItem (ItemDto item) {
+    public static Item toItem(ItemDto item) {
         return Item.builder()
                 .id(item.getId())
                 .name(item.getName())

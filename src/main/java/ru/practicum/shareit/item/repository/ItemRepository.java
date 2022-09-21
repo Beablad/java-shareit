@@ -12,9 +12,9 @@ public interface ItemRepository {
 
     public Item updateItem(Item item, int itemId);
 
-    public Item getItemById (int id);
+    public Item getItemById(int id);
 
-    public List<ItemDto> getItemsOfUser (int ownerId);
+    public List<ItemDto> getItemsOfUser(int ownerId);
 
     public List<Item> searchItem(String text);
 }

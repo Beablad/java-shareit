@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
-public class UserRepositoryImpl implements UserRepository{
+public class UserRepositoryImpl implements UserRepository {
 
     private Map<Integer, User> users;
 

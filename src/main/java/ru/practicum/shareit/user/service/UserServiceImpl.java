@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
-        for (User checkedUser: userRepositoryImpl.getUsers()){
+        for (User checkedUser : userRepositoryImpl.getUsers()) {
             if (checkedUser.getEmail().equals(user.getEmail())) {
                 throw new ValidationException("Ошибка валидации");
             }
@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(int userId, User user) {
-        for (User checkedUser: userRepositoryImpl.getUsers()){
+        for (User checkedUser : userRepositoryImpl.getUsers()) {
             if (checkedUser.getEmail().equals(user.getEmail())) {
                 throw new ValidationException("Ошибка валидации");
             }
@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser (int id) {
+    public void deleteUser(int id) {
         userRepositoryImpl.deleteUser(id);
     }
 

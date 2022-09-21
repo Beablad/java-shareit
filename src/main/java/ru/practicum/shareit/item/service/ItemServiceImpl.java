@@ -40,7 +40,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     public ItemDto updateItem(ItemDto itemDto, int ownerId, int itemId) {
-         Item changeableItem = itemRepository.getItemById(itemId);
+        Item changeableItem = itemRepository.getItemById(itemId);
         if (changeableItem.getOwner().getId() == ownerId) {
             return ItemMapper.toItemDto(itemRepository.updateItem(ItemMapper.toItem(itemDto), itemId));
         } else if (ownerId == 0) {
@@ -54,7 +54,7 @@ public class ItemServiceImpl implements ItemService {
         return ItemMapper.toItemDto(itemRepository.getItemById(id));
     }
 
-    public List<ItemDto> getItemsOfUser (int ownerId) {
+    public List<ItemDto> getItemsOfUser(int ownerId) {
         return itemRepository.getItemsOfUser(ownerId);
     }
 

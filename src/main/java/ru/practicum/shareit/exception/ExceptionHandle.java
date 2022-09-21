@@ -10,29 +10,29 @@ import java.util.Map;
 @RestControllerAdvice
 public class ExceptionHandle {
     @ExceptionHandler
-    @ResponseStatus (HttpStatus.CONFLICT)
-    public Map<String, String> handleConflictException (ConflictException e) {
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Map<String, String> handleConflictException(ConflictException e) {
         return Map.of("error", "Передан неверный идентификатор",
                 "errorMessage", e.getMessage());
     }
 
     @ExceptionHandler
-    @ResponseStatus (HttpStatus.NOT_FOUND)
-    public Map<String, String> handleNotFoundException (NotFoundException e) {
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleNotFoundException(NotFoundException e) {
         return Map.of("error", "Передан неверный идентификатор",
                 "errorMessage", e.getMessage());
     }
 
     @ExceptionHandler
-    @ResponseStatus (HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleValidationException (ValidationException e) {
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleValidationException(ValidationException e) {
         return Map.of("error", "Передан неверный идентификатор",
                 "errorMessage", e.getMessage());
     }
 
     @ExceptionHandler
-    @ResponseStatus (HttpStatus.FORBIDDEN)
-    public Map<String, String> handleNoAccessException (NoAccessException e) {
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public Map<String, String> handleNoAccessException(NoAccessException e) {
         return Map.of("error", "Передан неверный идентификатор",
                 "errorMessage", e.getMessage());
     }

@@ -38,7 +38,7 @@ public class UserController {
                 .collect(Collectors.toList());
     }
 
-    @PatchMapping ("/{userId}")
+    @PatchMapping("/{userId}")
     public UserDto updateUser(@PathVariable int userId, @RequestBody User user) {
         return UserMapper.toUserDto(userService.updateUser(userId, user));
     }
