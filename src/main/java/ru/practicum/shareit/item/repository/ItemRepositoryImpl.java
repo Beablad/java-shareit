@@ -42,14 +42,14 @@ public class ItemRepositoryImpl implements ItemRepository {
         return changeableItem;
     }
 
-    public Item getItemById (int id) {
+    public Item getItemById(int id) {
         return items.get(id);
     }
 
-    public List<ItemDto> getItemsOfUser (int ownerId) {
+    public List<ItemDto> getItemsOfUser(int ownerId) {
         List<ItemDto> itemsOfUser = new ArrayList<>();
-        for (Item item: items.values()) {
-            if (item.getOwner().getId()==ownerId){
+        for (Item item : items.values()) {
+            if (item.getOwner().getId() == ownerId) {
                 itemsOfUser.add(ItemMapper.toItemDto(item));
             }
         }
