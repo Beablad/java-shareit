@@ -9,6 +9,7 @@ import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
+import javax.validation.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,9 @@ public class ItemRepositoryImpl implements ItemRepository {
     public Item createItem(Item item, User owner) {
         item.setOwner(owner);
         items.put(item.getId(), item);
+        if (item.getAvailable() == null || item.getName() == null || item.getDescription() == null) {
+            throw new ValidationException("Неверные данные при создании предмета");
+        }
         return item;
     }
 

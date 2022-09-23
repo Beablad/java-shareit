@@ -3,11 +3,11 @@ package ru.practicum.shareit.user.service;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.ConflictException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepositoryImpl;
 
-import javax.validation.ValidationException;
 import java.util.List;
 
 @Service
@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     public User createUser(User user) {
         for (User checkedUser : userRepositoryImpl.getUsers()) {
             if (checkedUser.getEmail().equals(user.getEmail())) {
-                throw new ValidationException("Ошибка валидации");
+                throw new ConflictException("Ошибка валидации");
             }
         }
         user.setId(getNextId());
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
     public User updateUser(int userId, User user) {
         for (User checkedUser : userRepositoryImpl.getUsers()) {
             if (checkedUser.getEmail().equals(user.getEmail())) {
-                throw new ValidationException("Ошибка валидации");
+                throw new ConflictException("Ошибка валидации");
             }
         }
         return userRepositoryImpl.updateUser(userId, user);
