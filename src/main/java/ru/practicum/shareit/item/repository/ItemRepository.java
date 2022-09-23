@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface ItemRepository {
 
-    public Item createItem(Item item, User owner);
+    Item createItem(Item item, User owner);
 
-    public Item updateItem(Item item, int itemId);
+    Item updateItem(Item item, int itemId);
 
-    public Item getItemById(int id);
+    Item getItemById(int id);
 
-    public List<ItemDto> getItemsOfUser(int ownerId);
+    List<ItemDto> getItemsOfUser(int ownerId);
 
-    public List<Item> searchItem(String text);
+    List<Item> searchItem(String text);
 }

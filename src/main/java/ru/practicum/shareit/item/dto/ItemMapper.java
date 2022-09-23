@@ -9,7 +9,6 @@ import ru.practicum.shareit.item.model.Item;
 /**
  * TODO Sprint add-item-requests.
  */
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
 @Builder
 public class ItemMapper {
