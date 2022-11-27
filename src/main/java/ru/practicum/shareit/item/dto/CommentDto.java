@@ -9,7 +9,7 @@ import ru.practicum.shareit.item.model.Item;
 import java.time.LocalDateTime;
 
 @Data
-@FieldDefaults (level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class CommentDto {
 

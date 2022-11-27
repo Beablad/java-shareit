@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Entity (name = "bookings")
 public class Booking {
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column (name = "booking_id")
     long id;
     @Column (name = "start_date")

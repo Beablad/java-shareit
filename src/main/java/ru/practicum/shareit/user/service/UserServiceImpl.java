@@ -40,11 +40,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUser(long userId, UserDto userDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
-        if (!user.getName().equals(userDto.getName()) && userDto.getName()!=null){
+        if (!user.getName().equals(userDto.getName()) && userDto.getName() != null) {
             user.setName(userDto.getName());
         }
-        if (!user.getEmail().equals(userDto.getEmail()) && userDto.getEmail()!=null){
-            if (userRepository.findByEmail(userDto.getEmail())!=null) {
+        if (!user.getEmail().equals(userDto.getEmail()) && userDto.getEmail() != null) {
+            if (userRepository.findByEmail(userDto.getEmail()) != null) {
                 throw new ConflictException("Почта уже используется другим пользователем");
             }
             user.setEmail(userDto.getEmail());

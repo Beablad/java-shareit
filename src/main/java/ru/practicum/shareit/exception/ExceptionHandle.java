@@ -52,8 +52,8 @@ public class ExceptionHandle {
     }
 
     @ExceptionHandler
-    @ResponseStatus (HttpStatus.INTERNAL_SERVER_ERROR)
-    public Map<String, String> handleDataIntegrityViolationException (DataIntegrityViolationException e) {
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Map<String, String> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
         return Map.of("error", "Передан неверный идентификатор",
                 "errorMessage", e.getMessage());
     }

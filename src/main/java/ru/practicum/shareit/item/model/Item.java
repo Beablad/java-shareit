@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table (name = "items")
+@Table(name = "items")
 public class Item {
     @Column(name = "item_id", nullable = false)
     @Id
@@ -33,6 +33,6 @@ public class Item {
     @NotNull
     Boolean available;
     @OneToOne
-    @JoinColumn (name = "user_id")
+    @JoinColumn(name = "user_id")
     User owner;
 }

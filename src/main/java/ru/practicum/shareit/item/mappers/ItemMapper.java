@@ -34,7 +34,7 @@ public class ItemMapper {
                 .build();
     }
 
-    public static ItemDtoBooking toItemDtoBooking (Item item) {
+    public static ItemDtoBooking toItemDtoBooking(Item item) {
         return ItemDtoBooking.builder()
                 .id(item.getId())
                 .name(item.getName())

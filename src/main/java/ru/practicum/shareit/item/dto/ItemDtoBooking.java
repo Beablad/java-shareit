@@ -2,7 +2,7 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.booking.controller.dto.BookingDtoForItem;
+import ru.practicum.shareit.booking.dto.BookingDtoForItem;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@FieldDefaults (level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemDtoBooking {
     Long id;
     @NotBlank(message = "Имя вещи не может быть пустым")

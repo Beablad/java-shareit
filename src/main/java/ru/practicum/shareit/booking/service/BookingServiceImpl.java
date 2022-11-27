@@ -4,9 +4,9 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.booking.controller.dto.BookingDto;
-import ru.practicum.shareit.booking.controller.dto.BookingDtoShort;
-import ru.practicum.shareit.booking.controller.dto.BookingMapper;
+import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.dto.BookingDtoShort;
+import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.model.BookingStatus;
@@ -65,15 +65,15 @@ public class BookingServiceImpl implements BookingService {
     public BookingDto approveBooking(long bookingId, Boolean approve, long userId) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("Бронирование с таким id не найдено"));
-        if (booking.getBooker().getId()==userId){
+        if (booking.getBooker().getId() == userId) {
             throw new NotFoundException("Дождитесь подтвержения брони владельцем");
-        } else if (booking.getItem().getOwner().getId()!= userId) {
+        } else if (booking.getItem().getOwner().getId() != userId) {
             throw new ValidationException("Только владелец может подтвердить бронирование");
         }
         if (booking.getStatus().equals(BookingStatus.APPROVED)) {
             throw new ValidationException("Бронирование уже подтверждено");
         }
-        if (approve==null){
+        if (approve == null) {
             throw new ValidationException("Не указан статус бронирования");
         }
         if (approve) {
@@ -86,10 +86,10 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingDto getBooking (long bookingId, long userId) {
+    public BookingDto getBooking(long bookingId, long userId) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("Бронь не найдена"));
-        if (booking.getBooker().getId() == userId || booking.getItem().getOwner().getId()==userId){
+        if (booking.getBooker().getId() == userId || booking.getItem().getOwner().getId() == userId) {
             return BookingMapper.toBookingDto(booking);
         } else {
             throw new NotFoundException("Нет доступа к просмотру брони");
@@ -97,7 +97,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getBookingsOfUser (String state, long userId) {
+    public List<BookingDto> getBookingsOfUser(String state, long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         List<BookingDto> bookingList = bookingRepository.findByBooker_IdOrderByStartDesc(userId).stream()
                 .map(BookingMapper::toBookingDto).collect(Collectors.toList());

@@ -4,8 +4,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.booking.controller.dto.BookingDtoForItem;
-import ru.practicum.shareit.booking.controller.dto.BookingMapper;
+import ru.practicum.shareit.booking.dto.BookingDtoForItem;
+import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.NoAccessException;
@@ -146,8 +146,8 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-    public CommentDto createComment (long itemId, long userId, CommentDto commentDto){
-        if (commentDto.getText().isBlank()){
+    public CommentDto createComment(long itemId, long userId, CommentDto commentDto) {
+        if (commentDto.getText().isBlank()) {
             throw new ValidationException("Напишите текст комментария");
         }
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Предмет не найден"));

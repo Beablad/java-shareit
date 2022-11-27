@@ -23,7 +23,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
     Long id;
-    @Column (name = "user_name")
+    @Column(name = "user_name")
     @NotBlank
     String name;
     @Email

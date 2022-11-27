@@ -20,5 +20,5 @@ public interface ItemService {
 
     List<ItemDtoBooking> getItems();
 
-    public CommentDto createComment (long itemId, long userId, CommentDto commentDto);
+    public CommentDto createComment(long itemId, long userId, CommentDto commentDto);
 }
