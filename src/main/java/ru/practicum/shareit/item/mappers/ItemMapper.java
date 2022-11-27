@@ -1,8 +1,12 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.item.mappers;
 
 import lombok.Builder;
 import lombok.Data;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDtoBooking;
 import ru.practicum.shareit.item.model.Item;
+
+import java.util.ArrayList;
 
 /**
  * TODO Sprint add-item-requests.
@@ -18,7 +22,6 @@ public class ItemMapper {
                 .description(item.getDescription())
                 .available(item.getAvailable())
                 .owner(item.getOwner())
-                .request(item.getRequest())
                 .build();
     }
 
@@ -28,7 +31,18 @@ public class ItemMapper {
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
-                .request(item.getRequest())
+                .build();
+    }
+
+    public static ItemDtoBooking toItemDtoBooking (Item item) {
+        return ItemDtoBooking.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getAvailable())
+                .nextBooking(null)
+                .lastBooking(null)
+                .comments(new ArrayList<>())
                 .build();
     }
 }
