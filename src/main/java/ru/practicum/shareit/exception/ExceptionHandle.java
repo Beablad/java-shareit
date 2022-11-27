@@ -30,9 +30,9 @@ public class ExceptionHandle {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleValidationException(ValidationException e) {
+    public ErrorResponse handleValidationException(ValidationException e) {
         log.error(e.getMessage());
-        return e.getMessage();
+        return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler

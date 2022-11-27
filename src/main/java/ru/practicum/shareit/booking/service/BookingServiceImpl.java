@@ -120,7 +120,7 @@ public class BookingServiceImpl implements BookingService {
                 return bookingList.stream().filter(booking -> booking.getStatus().equals(BookingStatus.REJECTED))
                         .collect(Collectors.toList());
             default:
-                throw new ValidationException("Unknown state: UNSUPPORTED_STATUS");
+                throw new ValidationException("Unknown state: " + state);
         }
     }
 
@@ -155,7 +155,7 @@ public class BookingServiceImpl implements BookingService {
                 return bookingList.stream().filter(booking -> booking.getStatus().equals(BookingStatus.REJECTED))
                         .collect(Collectors.toList());
             default:
-                throw new ValidationException("Unknown state: UNSUPPORTED_STATUS");
+                throw new ValidationException("Unknown state: " + state);
         }
     }
 }
