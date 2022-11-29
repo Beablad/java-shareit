@@ -1,64 +1,63 @@
 package ru.practicum.shareit.user.service;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.ConflictException;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.repository.UserRepositoryImpl;
+import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    UserRepositoryImpl userRepositoryImpl;
-    int id;
+    UserRepository userRepository;
 
-    public UserServiceImpl(UserRepositoryImpl userRepositoryImpl) {
-        this.userRepositoryImpl = userRepositoryImpl;
-        id = 1;
+    @Override
+    public UserDto createUser(UserDto userDto) {
+        return UserMapper.toUserDto(userRepository.save(UserMapper.toUser(userDto)));
     }
 
     @Override
-    public User createUser(User user) {
-        for (User checkedUser : userRepositoryImpl.getUsers()) {
-            if (checkedUser.getEmail().equals(user.getEmail())) {
-                throw new ConflictException("Ошибка валидации");
-            }
+    public UserDto getUserById(long id) {
+        return UserMapper.toUserDto(userRepository.findById(id).orElseThrow(()
+                -> new NotFoundException("Пользователь не найден")));
+    }
+
+    @Override
+    public List<UserDto> getUsers() {
+        return userRepository.findAll().stream().map(UserMapper::toUserDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public UserDto updateUser(long userId, UserDto userDto) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        if (!user.getName().equals(userDto.getName()) && userDto.getName() != null) {
+            user.setName(userDto.getName());
         }
-        user.setId(getNextId());
-        return userRepositoryImpl.createUser(user);
-    }
-
-    @Override
-    public User getUserById(int id) {
-        return userRepositoryImpl.getUserById(id).orElseThrow(() -> new NotFoundException("Неверный идентификатор"));
-    }
-
-    @Override
-    public List<User> getUsers() {
-        return userRepositoryImpl.getUsers();
-    }
-
-    @Override
-    public User updateUser(int userId, User user) {
-        for (User checkedUser : userRepositoryImpl.getUsers()) {
-            if (checkedUser.getEmail().equals(user.getEmail())) {
-                throw new ConflictException("Ошибка валидации");
+        if (!user.getEmail().equals(userDto.getEmail()) && userDto.getEmail() != null) {
+            if (userRepository.findByEmail(userDto.getEmail()) != null) {
+                throw new ConflictException("Почта уже используется другим пользователем");
             }
+            user.setEmail(userDto.getEmail());
         }
-        return userRepositoryImpl.updateUser(userId, user);
+        userRepository.save(user);
+        return UserMapper.toUserDto(user);
     }
 
     @Override
-    public void deleteUser(int id) {
-        userRepositoryImpl.deleteUser(id);
+    public void deleteUser(long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        userRepository.delete(user);
     }
 
-    private int getNextId() {
-        return id++;
-    }
+
 }
