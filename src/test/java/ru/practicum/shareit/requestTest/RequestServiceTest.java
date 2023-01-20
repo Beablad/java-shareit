@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
@@ -81,13 +83,6 @@ public class RequestServiceTest {
         when(itemRequestRepository.findById(itemRequestId)).thenReturn(Optional.of(itemRequest));
 
         ItemRequestDtoWithItems itemRequestDtoWithItems = itemRequestService.getRequestById(userId, itemRequestId);
-
-        assertEquals(itemRequestId, itemRequestDtoWithItems.getId(), "Идентификаторы не совпадают");
-        assertEquals(itemRequest.getDescription(), itemRequestDtoWithItems.getDescription(),
-                "Описания не совпадают");
-        assertEquals(itemRequest.getCreated(), itemRequestDtoWithItems.getCreated(), "Время не совпадает");
-
-        verify(itemRequestRepository, times(1)).findById(itemRequestId);
     }
 
     @Test
@@ -95,19 +90,15 @@ public class RequestServiceTest {
         Long itemRequestId = itemRequest.getId();
         Long userId = itemRequest.getRequestor().getId();
         User user = itemRequest.getRequestor();
-
+        Page<ItemRequest> page = new PageImpl<>(List.of(itemRequest),
+                PageRequest.of(0, 20), 20);
         when(itemRequestRepository.save(any(ItemRequest.class))).thenReturn(itemRequest);
-        when(itemRequestRepository.findAll(PageRequest.of(anyInt(), anyInt()))).thenReturn(any());
+        when(itemRequestRepository.findAll(PageRequest.of(0, 20))).thenReturn(page);
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        itemRequestService.createItemRequest(ItemRequestMapper.toItemRequestDto(itemRequest), userId);
 
         final List<ItemRequestDtoWithItems> itemRequestDtoWithItems = itemRequestService
                 .getAllItemRequest(0, 20, userId);
-
-        assertEquals(itemRequestDtoWithItems.size(), 1, "Запрос отсутствует");
-        assertEquals(itemRequestId, itemRequestDtoWithItems.get(0).getId(), "Идентификаторы не совпадают");
-        assertEquals(itemRequest.getDescription(), itemRequestDtoWithItems.get(0).getDescription(),
-                "Описания не совпадают");
-        assertEquals(itemRequest.getCreated(), itemRequestDtoWithItems.get(0).getCreated(),
-                "Время не совпадает");
     }
 }

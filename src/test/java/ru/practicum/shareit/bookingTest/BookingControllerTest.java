@@ -128,7 +128,7 @@ public class BookingControllerTest {
     public void getAllBookingByOwner() throws Exception {
         BookingDto bookingDto = BookingMapper.toBookingDto(booking);
         List<BookingDto> list = List.of(bookingDto);
-        when(bookingService.getAllBookingByOwner(1, "WAITING", 0, 10)).thenReturn(list);
+        when(bookingService.getAllBookingByOwner(1, "WAITING", 0, 20)).thenReturn(list);
         mvc.perform(get("/bookings/owner")
                 .param("state", "WAITING")
                 .header("X-Sharer-User-Id", 1))

@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
@@ -60,10 +59,11 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         }
         userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         int page = from / size;
-        Pageable pageable = PageRequest.of(page, size, Sort.by("created"));
+        Pageable pageable = PageRequest.of(page, size);
         List<ItemRequest> itemRequestList = itemRequestRepository.findAll(pageable).stream()
                 .filter(itemRequest -> !Objects.equals(itemRequest.getRequestor().getId(), userId))
                 .collect(Collectors.toList());
+//        List<ItemRequest> itemRequestList = itemRequestRepository.findAllByRequestorId(userId);
         return getListOfItemRequestDtoWithItems(itemRequestList);
     }
 

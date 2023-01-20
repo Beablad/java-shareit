@@ -138,19 +138,19 @@ class ItemServiceTest {
     @Test
     void getItemsOfUser() {
         List<Item> items = List.of(item);
-        when(itemRepository.findAll()).thenReturn(items);
+        when(itemRepository.findByOwnerId(user.getId(), PageRequest.of(0,20))).thenReturn(items);
         List<ItemDtoBooking> listDtos = itemService.getItemsOfUser(user.getId(), 0, 20);
 
         assertEquals(items.get(0).getId(), listDtos.get(0).getId());
 
-        verify(itemRepository, times(1)).findAll();
+        verify(itemRepository, times(1)).findByOwnerId(user.getId(), PageRequest.of(0,20));
     }
 
     @Test
     void searchItem() {
         String searchText = "test";
         List<Item> list = List.of(item);
-        Pageable pageable = PageRequest.of(1, 20);
+        Pageable pageable = PageRequest.of(0, 20);
         when(itemRepository.search(searchText, pageable)).thenReturn(list);
         List<ItemDto> dtoList = itemService.searchItem(searchText, 0, 20);
 

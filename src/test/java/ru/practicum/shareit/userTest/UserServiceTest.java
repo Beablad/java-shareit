@@ -61,9 +61,9 @@ public class UserServiceTest {
 
     @Test
     public void getUserById() {
-        UserDto userDto = userService.getUserById(user.getId());
         when(userRepository.save(user)).thenReturn(user);
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        UserDto userDto = userService.getUserById(user.getId());
         userService.createUser(userDto);
 
         assertEquals(user.getId(), userDto.getId());
