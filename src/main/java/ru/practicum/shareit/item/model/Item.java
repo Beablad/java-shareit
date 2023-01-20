@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
@@ -18,10 +19,12 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Entity
 @Table(name = "items")
+@EqualsAndHashCode (onlyExplicitlyIncluded = true)
 public class Item {
     @Column(name = "item_id", nullable = false)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     Long id;
     @Column(name = "item_name")
     @NotBlank
@@ -35,4 +38,7 @@ public class Item {
     @OneToOne
     @JoinColumn(name = "user_id")
     User owner;
+    @ManyToOne
+    @JoinColumn(name = "request_id")
+    private ItemRequest request;
 }

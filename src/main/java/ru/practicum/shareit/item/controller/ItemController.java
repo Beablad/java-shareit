@@ -10,11 +10,10 @@ import ru.practicum.shareit.item.dto.ItemDtoBooking;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
 @RestController
 @RequestMapping("/items")
 @AllArgsConstructor
@@ -43,17 +42,17 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDtoBooking> getItems(@RequestHeader(value = "X-Sharer-User-Id", defaultValue = "0") long ownerId) {
-        if (ownerId == 0) {
-            return itemService.getItems();
-        } else {
-            return itemService.getItemsOfUser(ownerId);
-        }
+    public List<ItemDtoBooking> getItems(@RequestHeader(value = "X-Sharer-User-Id", defaultValue = "0") long ownerId,
+                                         @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+                                         @RequestParam (defaultValue = "10") @Positive Integer size) {
+        return itemService.getItemsOfUser(ownerId, from, size);
     }
 
     @GetMapping("/search")
-    public List<ItemDto> searchItem(@RequestParam(required = false) String text) {
-        return itemService.searchItem(text);
+    public List<ItemDto> searchItem(@RequestParam String text,
+                                    @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+                                    @RequestParam (defaultValue = "10") @Positive Integer size) {
+        return itemService.searchItem(text, from, size);
     }
 
     @PostMapping("/{itemId}/comment")

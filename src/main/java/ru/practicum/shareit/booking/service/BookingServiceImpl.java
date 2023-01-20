@@ -3,6 +3,8 @@ package ru.practicum.shareit.booking.service;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoShort;
@@ -15,7 +17,6 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
@@ -97,9 +98,14 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getBookingsOfUser(String state, long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
-        List<BookingDto> bookingList = bookingRepository.findByBooker_IdOrderByStartDesc(userId).stream()
+    public List<BookingDto> getBookingsOfUser(String state, long userId, Integer from, Integer size) {
+        if (from<0 || size<=0){
+            throw new ValidationException("Неверные параметры запроса");
+        }
+        int page = from / size;
+        Pageable pageable = PageRequest.of(page, size);
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        List<BookingDto> bookingList = bookingRepository.findByBookerIdOrderByStartDesc(userId, pageable).stream()
                 .map(BookingMapper::toBookingDto).collect(Collectors.toList());
         switch (BookingState.valueOf(state)) {
             case ALL:
@@ -125,10 +131,15 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getAllBookingByOwner(long userId, String state) {
+    public List<BookingDto> getAllBookingByOwner(long userId, String state, Integer from, Integer size) {
+        int page = from / size;
+        if (from < 0) {
+            throw new ValidationException("Неверно указаны параметры пагинации");
+        }
+        Pageable pageable = PageRequest.of(page, size);
         userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Неверный идентификатор пользователя"));
 
-        List<BookingDto> bookingList = bookingRepository.searchBookingByItemOwnerId(userId).stream()
+        List<BookingDto> bookingList = bookingRepository.searchBookingByItemOwnerIdOrderByStartDesc(userId, pageable).stream()
                 .map(BookingMapper::toBookingDto).collect(Collectors.toList());
 
         if (bookingList.isEmpty()) {
@@ -146,8 +157,8 @@ public class BookingServiceImpl implements BookingService {
                 return bookingList.stream().filter(booking -> LocalDateTime.now().isAfter(booking.getEnd()))
                         .collect(Collectors.toList());
             case FUTURE:
-                return bookingRepository.searchBookingByItemOwnerIdAndStartIsAfterOrderByStartDesc(userId,
-                        LocalDateTime.now()).stream().map(BookingMapper::toBookingDto).collect(Collectors.toList());
+                return bookingList.stream().filter(booking -> LocalDateTime.now().isBefore(booking.getStart()))
+                        .collect(Collectors.toList());
             case WAITING:
                 return bookingList.stream().filter(booking -> booking.getStatus().equals(BookingStatus.WAITING))
                         .collect(Collectors.toList());

@@ -7,9 +7,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -18,10 +15,12 @@ import javax.validation.constraints.NotBlank;
 @Entity
 @Builder
 @Table(name = "users")
+@EqualsAndHashCode (onlyExplicitlyIncluded = true)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
+    @EqualsAndHashCode.Include
     Long id;
     @Column(name = "user_name")
     @NotBlank
