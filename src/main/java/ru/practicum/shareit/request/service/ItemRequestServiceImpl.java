@@ -67,14 +67,14 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         return getListOfItemRequestDtoWithItems(itemRequestList);
     }
 
-    public ItemRequestDtoWithItems getRequestById (long userId, long requestId) {
+    public ItemRequestDtoWithItems getRequestById(long userId, long requestId) {
         userRepository.findById(userId).orElseThrow(() -> new NotFoundException("ПОльзователь не найден"));
         List<ItemRequest> itemRequest = List.of(itemRequestRepository.findById(requestId)
                 .orElseThrow(() -> new NotFoundException("Запрос не найден")));
         return getListOfItemRequestDtoWithItems(itemRequest).get(0);
     }
 
-    private List<ItemRequestDtoWithItems> getListOfItemRequestDtoWithItems (List<ItemRequest> list) {
+    private List<ItemRequestDtoWithItems> getListOfItemRequestDtoWithItems(List<ItemRequest> list) {
         List<ItemRequestDtoWithItems> itemRequestList =
                 list.stream().map(ItemRequestMapper::toItemRequestDtoWithItems).collect(Collectors.toList());
         for (ItemRequestDtoWithItems itemRequest : itemRequestList) {

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class ItemRequestMapper {
 
-    public static ItemRequestDto toItemRequestDto (ItemRequest itemRequest){
+    public static ItemRequestDto toItemRequestDto(ItemRequest itemRequest) {
         return ItemRequestDto.builder()
                 .id(itemRequest.getId())
                 .description(itemRequest.getDescription())
@@ -15,7 +15,7 @@ public class ItemRequestMapper {
                 .build();
     }
 
-    public static ItemRequest toItemRequest (ItemRequestDto itemRequestDto){
+    public static ItemRequest toItemRequest(ItemRequestDto itemRequestDto) {
         return ItemRequest.builder()
                 .id(itemRequestDto.getId())
                 .description(itemRequestDto.getDescription())
@@ -24,7 +24,7 @@ public class ItemRequestMapper {
                 .build();
     }
 
-    public static ItemRequestDtoWithItems toItemRequestDtoWithItems (ItemRequest itemRequest) {
+    public static ItemRequestDtoWithItems toItemRequestDtoWithItems(ItemRequest itemRequest) {
         return ItemRequestDtoWithItems.builder()
                 .id(itemRequest.getId())
                 .description(itemRequest.getDescription())

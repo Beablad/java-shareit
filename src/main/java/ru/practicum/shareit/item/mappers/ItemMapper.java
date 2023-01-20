@@ -19,7 +19,7 @@ public class ItemMapper {
                 .description(item.getDescription())
                 .available(item.getAvailable())
                 .build();
-        if (item.getRequest()!=null) {
+        if (item.getRequest() != null) {
             itemDto.setRequestId(item.getRequest().getId());
         }
         return itemDto;

@@ -99,7 +99,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingDto> getBookingsOfUser(String state, long userId, Integer from, Integer size) {
-        if (from<0 || size<=0){
+        if (from < 0 || size <= 0) {
             throw new ValidationException("Неверные параметры запроса");
         }
         int page = from / size;

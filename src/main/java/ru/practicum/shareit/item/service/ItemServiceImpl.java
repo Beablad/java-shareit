@@ -59,7 +59,7 @@ ItemServiceImpl implements ItemService {
         Item item = ItemMapper.toItem(itemDto);
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         item.setOwner(user);
-        if (itemDto.getRequestId()!=null) {
+        if (itemDto.getRequestId() != null) {
             itemRequestRepository.findById(itemDto.getRequestId()).ifPresent(item::setRequest);
         }
         itemRepository.save(item);
@@ -106,7 +106,7 @@ ItemServiceImpl implements ItemService {
     }
 
     public List<ItemDtoBooking> getItemsOfUser(long userId, Integer from, Integer size) {
-        int page = from/size;
+        int page = from / size;
         Pageable pageable = PageRequest.of(page, size);
         List<ItemDtoBooking> itemDtoBookings = itemRepository.findByOwnerId(userId, pageable).stream()
                 .filter(item -> item.getOwner().getId().equals(userId))
@@ -127,7 +127,7 @@ ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> searchItem(String text, Integer from, Integer size) {
-        int page = from/size;
+        int page = from / size;
         Pageable pageable = PageRequest.of(page, size);
         if (!text.isBlank()) {
             return itemRepository.search(text, pageable)
