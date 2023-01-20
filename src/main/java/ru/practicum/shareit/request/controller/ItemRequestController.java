@@ -23,8 +23,8 @@ public class ItemRequestController {
     }
 
     @GetMapping
-    public List<ItemRequestDtoWithItems> getItemRequestWithAnswers
-            (@RequestHeader(value = "X-Sharer-User-Id", defaultValue = "0") long requestorId) {
+    public List<ItemRequestDtoWithItems> getItemRequestWithAnswers(@RequestHeader(value = "X-Sharer-User-Id",
+                                            defaultValue = "0") long requestorId) {
         return itemRequestService.getItemRequestWithAnswers(requestorId);
     }
 
@@ -36,8 +36,8 @@ public class ItemRequestController {
     }
 
     @GetMapping("/{requestId}")
-    public ItemRequestDtoWithItems getRequestById(@RequestHeader("X-Sharer-User-Id") long userId
-            , @PathVariable long requestId) {
+    public ItemRequestDtoWithItems getRequestById(@RequestHeader("X-Sharer-User-Id") long userId,
+                                                  @PathVariable long requestId) {
         return itemRequestService.getRequestById(userId, requestId);
     }
 }
