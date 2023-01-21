@@ -37,7 +37,7 @@ public class BookingServiceTest {
     private User booker;
 
     @BeforeEach
-    void beforeEach() {
+    private void beforeEach() {
         itemRepository = mock(ItemRepository.class);
         userRepository = mock(UserRepository.class);
         bookingRepository = mock(BookingRepository.class);

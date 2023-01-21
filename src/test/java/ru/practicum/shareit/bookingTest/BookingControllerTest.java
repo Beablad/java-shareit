@@ -47,7 +47,7 @@ public class BookingControllerTest {
     BookingService bookingService;
     @InjectMocks
     BookingController bookingController;
-    private Booking booking;
+    Booking booking;
 
     @BeforeEach
     public void beforeEach() {
