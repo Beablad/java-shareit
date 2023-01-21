@@ -12,6 +12,8 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.booking.service.BookingServiceImpl;
+import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
@@ -22,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static ru.practicum.shareit.booking.model.BookingStatus.*;
 
@@ -199,7 +201,7 @@ public class BookingServiceTest {
         when(bookingRepository.findByBookerIdOrderByStartDesc(anyLong(), any()))
                 .thenReturn(Collections.singletonList(booking));
 
-        List<BookingDto> bookingDtoList = bookingService.getBookingsOfUser("REJECTED", bookerId,0, 20);
+        List<BookingDto> bookingDtoList = bookingService.getBookingsOfUser("REJECTED", bookerId, 0, 20);
 
         assertEquals(bookingDtoList.size(), 1, "Бронь отсутствует");
         assertEquals(booking.getId(), bookingDtoList.get(0).getId(), "Идентификаторы не совпадают");
@@ -338,5 +340,162 @@ public class BookingServiceTest {
         verify(bookingRepository, times(1)).searchBookingByItemOwnerIdOrderByStartDesc(anyLong(), any());
     }
 
+    @Test
+    public void approveBookingNoOwnerItem() {
+        Long bookingId = booking.getId();
+        booking.setStatus(WAITING);
 
+        when(bookingRepository.findById(bookingId)).thenReturn(Optional.of(booking));
+
+        Throwable throwable = assertThrows(NotFoundException.class, () ->
+                bookingService.approveBooking(bookingId, true, booker.getId()));
+
+        assertEquals("Дождитесь подтвержения брони владельцем", throwable.getMessage(),
+                "Текст ошибки валидации разный");
+
+        verify(bookingRepository, times(1)).findById(bookingId);
+    }
+
+    @Test
+    public void approveBookingApproved() {
+        Long bookingId = booking.getId();
+        Long itemUserId = booking.getItem().getOwner().getId();
+
+        when(bookingRepository.findById(bookingId)).thenReturn(Optional.of(booking));
+
+        Throwable throwable = assertThrows(ValidationException.class, () -> bookingService.approveBooking(bookingId,
+                true, itemUserId));
+        assertNotNull(throwable.getMessage());
+
+        assertEquals("Бронирование уже подтверждено", throwable.getMessage(),
+                "Текст ошибки валидации разный");
+
+        verify(bookingRepository, times(1)).findById(bookingId);
+    }
+
+    @Test
+    public void approveBookingApproveNull() {
+        Long bookingId = booking.getId();
+        Long itemUserId = booking.getItem().getOwner().getId();
+
+        booking.setStatus(WAITING);
+
+        when(bookingRepository.findById(bookingId)).thenReturn(Optional.of(booking));
+
+        Throwable throwable = assertThrows(ValidationException.class, () -> bookingService.approveBooking(bookingId,
+                null, itemUserId));
+        assertNotNull(throwable.getMessage());
+
+        assertEquals("Не указан статус бронирования", throwable.getMessage(),
+                "Текст ошибки валидации разный");
+
+        verify(bookingRepository, times(1)).findById(bookingId);
+    }
+
+    @Test
+    public void createBookingUnknownUser() {
+        when(userRepository.findById(anyLong())).thenThrow(new NotFoundException("Неверный идентификатор пользователя"));
+
+        Throwable throwable = assertThrows(NotFoundException.class, () ->
+                bookingService.createBooking(toBookingDtoShort(booking), 3L));
+
+        assertEquals("Неверный идентификатор пользователя", throwable.getMessage(),
+                "Неверный идентификатор пользователя");
+
+        verify(userRepository, times(1)).findById(anyLong());
+    }
+
+    @Test
+    public void createBookingFalseItem() {
+        Long bookerId = booking.getBooker().getId();
+        User booker = booking.getBooker();
+        Long itemId = booking.getItem().getId();
+        Item item = booking.getItem();
+        item.setAvailable(false);
+
+        when(userRepository.findById(bookerId)).thenReturn(Optional.of(booker));
+        when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
+
+        Throwable throwable = assertThrows(ValidationException.class, () ->
+                bookingService.createBooking(toBookingDtoShort(booking), bookerId));
+
+        assertEquals("Эта вещь недоступна для аренды", throwable.getMessage(),
+                "Текст ошибки валидации разный");
+    }
+
+    @Test
+    public void createBookingOwnItem() {
+        Item item = booking.getItem();
+        Long ownerId = item.getOwner().getId();
+        User owner = item.getOwner();
+        Long itemId = booking.getItem().getId();
+
+        when(userRepository.findById(ownerId)).thenReturn(Optional.of(owner));
+        when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
+
+        Throwable throwable = assertThrows(NotFoundException.class, () ->
+                bookingService.createBooking(toBookingDtoShort(booking), ownerId));
+
+        assertEquals("Владелец вещи не может забронировать свою вещь", throwable.getMessage(),
+                "Текст ошибки валидации разный");
+    }
+
+    @Test
+    public void getUnknownBooking() {
+        Long bookingId = booking.getId();
+
+        Throwable throwable = assertThrows(NotFoundException.class, () ->
+                bookingService.getBooking(bookingId, 3L));
+
+        assertEquals("Бронь не найдена", throwable.getMessage(),
+                "Текст ошибки валидации разный");
+    }
+
+    @Test
+    public void getAllBookingsUnknownUser() {
+        Throwable throwable = assertThrows(NotFoundException.class, () ->
+                bookingService.getBookingsOfUser("ALL", 3L, 0, 20));
+
+        assertEquals("Пользователь не найден", throwable.getMessage(),
+                "Текст ошибки валидации разный");
+    }
+
+    @Test
+    public void createBookingWithInvalidLocalDateTimeEnd() {
+        LocalDateTime endError = booking.getEnd().minusDays(20);
+        booking.setEnd(endError);
+
+        Throwable throwable = assertThrows(ValidationException.class, () ->
+                bookingService.createBooking(toBookingDtoShort(booking), booking.getBooker().getId()));
+        assertEquals("Время окончания не может быть больше времени начала", throwable.getMessage(),
+                "Текст ошибки валидации разный");
+    }
+
+    @Test
+    public void getAllBookingUnsupportedStatus() {
+        Long bookerId = booking.getBooker().getId();
+        User booker = booking.getBooker();
+
+        when(userRepository.findById(bookerId)).thenReturn(Optional.of(booker));
+
+        Throwable throwable = assertThrows(IllegalArgumentException.class, () ->
+                bookingService.getBookingsOfUser("APPROVED", bookerId, 0, 20));
+
+        assertEquals("Unknown state: APPROVED", throwable.getMessage(),
+                "Текст ошибки валидации разный");
+    }
+
+    @Test
+    public void getAllUserBookingUnsupportedStatus() {
+        Long bookerId = booking.getBooker().getId();
+        User booker = booking.getBooker();
+
+        when(userRepository.findById(bookerId)).thenReturn(Optional.of(booker));
+
+        Throwable throwable = assertThrows(IllegalArgumentException.class, () ->
+                bookingService.getAllBookingByOwner(bookerId, "APPROVED", 0, 20));
+
+        assertEquals("У пользователя нет вещей", throwable.getMessage(),
+                "Текст ошибки валидации разный");
+    }
 }

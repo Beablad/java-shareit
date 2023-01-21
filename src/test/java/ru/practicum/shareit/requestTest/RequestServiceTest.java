@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestDtoWithItems;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 
@@ -100,5 +102,56 @@ public class RequestServiceTest {
 
         final List<ItemRequestDtoWithItems> itemRequestDtoWithItems = itemRequestService
                 .getAllItemRequest(0, 20, userId);
+    }
+
+    @Test
+    public void createItemRequestUnknownUser() {
+        Throwable throwable = assertThrows(NotFoundException.class, () ->
+                itemRequestService.createItemRequest(itemRequestMapper.toItemRequestDto(itemRequest), 3L));
+
+        assertEquals("Пользователь не найден", throwable.getMessage(),
+                "Неверный идентификатор пользователя");
+    }
+
+    @Test
+    public void getItemRequestUnknownUser() {
+        Long itemRequestId = itemRequest.getId();
+
+        Throwable throwable = assertThrows(NotFoundException.class, () ->
+                itemRequestService.getRequestById(3L, itemRequestId));
+
+        assertEquals("ПОльзователь не найден", throwable.getMessage(),
+                "Попробуйте другой идентификатор");
+    }
+
+    @Test
+    public void getItemRequestUnknownRequestId() {
+        Long userId = itemRequest.getRequestor().getId();
+
+        when(userRepository.findById(anyLong())).thenReturn((Optional.of(user)));
+
+        Throwable throwable = assertThrows(NotFoundException.class, () ->
+                itemRequestService.getRequestById(userId, 100L));
+
+        assertEquals("Запрос не найден", throwable.getMessage(),
+                "Попробуйте другой идентификатор");
+    }
+
+    @Test
+    public void getAllItemRequestsUnknownUser() {
+        Throwable throwable = assertThrows(NotFoundException.class, () ->
+                itemRequestService.getAllItemRequest(0, 20, 3L));
+
+        assertEquals("Пользователь не найден", throwable.getMessage(),
+                "Неверный идентификатор пользователя");
+    }
+
+    @Test
+    public void getAllItemRequestWithPageableUnknownUser() {
+        Throwable throwable = assertThrows(NotFoundException.class, () ->
+                itemRequestService.getAllItemRequest(0, 20, 3L));
+
+        assertEquals("Пользователь не найден", throwable.getMessage(),
+                "Неверный идентификатор пользователя");
     }
 }

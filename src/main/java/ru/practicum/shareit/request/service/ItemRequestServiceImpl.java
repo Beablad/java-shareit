@@ -63,7 +63,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         List<ItemRequest> itemRequestList = itemRequestRepository.findAll(pageable).stream()
                 .filter(itemRequest -> !Objects.equals(itemRequest.getRequestor().getId(), userId))
                 .collect(Collectors.toList());
-//        List<ItemRequest> itemRequestList = itemRequestRepository.findAllByRequestorId(userId);
         return getListOfItemRequestDtoWithItems(itemRequestList);
     }
 
