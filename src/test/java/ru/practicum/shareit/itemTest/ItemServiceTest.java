@@ -99,8 +99,10 @@ class ItemServiceTest {
     @Test
     void createItem() {
         ItemDto itemDto = ItemMapper.toItemDto(item);
+        ItemRequest itemRequest = item.getRequest();
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         when(itemRepository.save(item)).thenReturn(item);
+        when(itemRequestRepository.findById(item.getRequest().getId())).thenReturn(Optional.of(itemRequest));
         itemService.createItem(itemDto, user.getId());
 
         assertEquals(item.getId(), itemDto.getId());
