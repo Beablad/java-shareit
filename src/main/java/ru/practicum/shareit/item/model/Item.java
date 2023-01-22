@@ -19,12 +19,10 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Entity
 @Table(name = "items")
-@EqualsAndHashCode (onlyExplicitlyIncluded = true)
 public class Item {
     @Column(name = "item_id", nullable = false)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     Long id;
     @Column(name = "item_name")
     @NotBlank

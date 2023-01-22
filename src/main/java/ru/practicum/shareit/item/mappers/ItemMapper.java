@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 @Data
 @Builder
-public class ItemMapper {
+public final class ItemMapper {
 
     public static ItemDto toItemDto(Item item) {
         ItemDto itemDto = ItemDto.builder()

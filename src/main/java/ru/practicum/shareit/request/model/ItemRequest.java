@@ -8,17 +8,14 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table (name = "requests")
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ItemRequest {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column (name = "request_id")
-    @EqualsAndHashCode.Include
     long id;
     @Column
     String description;

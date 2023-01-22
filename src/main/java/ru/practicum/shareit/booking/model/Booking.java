@@ -9,18 +9,15 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity(name = "bookings")
-@EqualsAndHashCode
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "booking_id")
-    @EqualsAndHashCode.Include
     long id;
     @Column(name = "start_date")
     LocalDateTime start;
