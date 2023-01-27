@@ -7,6 +7,7 @@ public enum BookingState {
     FUTURE,
     WAITING,
     REJECTED,
-
+    APPROVED,
+    CANCELED,
     UNSUPPORTED_STATUS,
 }

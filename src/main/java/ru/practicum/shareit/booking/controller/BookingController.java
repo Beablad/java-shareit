@@ -9,12 +9,11 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoShort;
 import ru.practicum.shareit.booking.service.BookingService;
 
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * TODO Sprint add-bookings.
- */
 @RestController
 @RequestMapping(path = "/bookings")
 @AllArgsConstructor
@@ -42,14 +41,18 @@ public class BookingController {
     }
 
     @GetMapping
-    public List<BookingDto> getBookingsOfUser(@Param("state") String state,
-                                              @RequestHeader(name = "X-Sharer-User-Id", defaultValue = "0") long userId) {
-        return bookingService.getBookingsOfUser(Objects.requireNonNullElse(state, "ALL"), userId);
+    public List<BookingDto> getBookingsOfUser(@RequestParam(defaultValue = "ALL") String state,
+                                              @RequestHeader(name = "X-Sharer-User-Id", defaultValue = "0") long userId,
+                                              @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                              @RequestParam(defaultValue = "20") @Positive int size) {
+        return bookingService.getBookingsOfUser(Objects.requireNonNullElse(state, "ALL"), userId, from, size);
     }
 
     @GetMapping("/owner")
     public List<BookingDto> getAllBookingByOwner(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                 @RequestParam(defaultValue = "ALL") String state) {
-        return bookingService.getAllBookingByOwner(userId, state);
+                                                 @RequestParam(defaultValue = "ALL") String state,
+                                                 @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                                 @RequestParam(defaultValue = "20") @Positive int size) {
+        return bookingService.getAllBookingByOwner(userId, state, from, size);
     }
 }

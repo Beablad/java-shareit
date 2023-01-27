@@ -3,7 +3,7 @@ package ru.practicum.shareit.booking.dto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 
-public class BookingMapper {
+public final class BookingMapper {
 
     public static Booking toBooking(BookingDto bookingDto) {
         return Booking.builder()

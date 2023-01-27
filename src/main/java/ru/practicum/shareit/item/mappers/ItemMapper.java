@@ -8,21 +8,21 @@ import ru.practicum.shareit.item.model.Item;
 
 import java.util.ArrayList;
 
-/**
- * TODO Sprint add-item-requests.
- */
 @Data
 @Builder
-public class ItemMapper {
+public final class ItemMapper {
 
     public static ItemDto toItemDto(Item item) {
-        return ItemDto.builder()
+        ItemDto itemDto = ItemDto.builder()
                 .id(item.getId())
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
-                .owner(item.getOwner())
                 .build();
+        if (item.getRequest() != null) {
+            itemDto.setRequestId(item.getRequest().getId());
+        }
+        return itemDto;
     }
 
     public static Item toItem(ItemDto item) {

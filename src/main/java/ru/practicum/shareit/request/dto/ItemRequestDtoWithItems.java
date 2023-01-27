@@ -1,22 +1,21 @@
 package ru.practicum.shareit.request.dto;
 
-import com.sun.istack.NotNull;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.item.dto.ItemDto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
-@Builder
 @FieldDefaults (level = AccessLevel.PRIVATE)
-@AllArgsConstructor
-@NoArgsConstructor
-public class ItemRequestDto {
+@Builder
+public class ItemRequestDtoWithItems {
 
     long id;
-    @NotNull
     String description;
-    User requestor;
     LocalDateTime created;
+    List<ItemDto> items;
 }
