@@ -20,28 +20,29 @@ public class
 ItemController {
 
     ItemService itemService;
+    final String userIdHeader = "X-Sharer-User-Id";
 
     @PostMapping
     public ItemDto createItem(@Valid() @RequestBody ItemDto item,
-                              @RequestHeader(value = "X-Sharer-User-Id", defaultValue = "0") long ownerId) {
+                              @RequestHeader(value = userIdHeader, defaultValue = "0") long ownerId) {
         return itemService.createItem(item, ownerId);
     }
 
     @PatchMapping("/{itemId}")
     public ItemDto updateItem(@RequestBody ItemDto item,
-                              @RequestHeader(value = "X-Sharer-User-Id", defaultValue = "0") long ownerId,
+                              @RequestHeader(value = userIdHeader, defaultValue = "0") long ownerId,
                               @PathVariable long itemId) {
         return itemService.updateItem(item, ownerId, itemId);
     }
 
     @GetMapping("/{itemId}")
     public ItemDtoBooking getItemById(@PathVariable long itemId,
-                                      @RequestHeader(value = "X-Sharer-User-Id", defaultValue = "0") long userId) {
+                                      @RequestHeader(value = userIdHeader, defaultValue = "0") long userId) {
         return itemService.getItemById(itemId, userId);
     }
 
     @GetMapping
-    public List<ItemDtoBooking> getItems(@RequestHeader(value = "X-Sharer-User-Id", defaultValue = "0") long ownerId,
+    public List<ItemDtoBooking> getItems(@RequestHeader(value = userIdHeader, defaultValue = "0") long ownerId,
                                          @RequestParam(defaultValue = "0") Integer from,
                                          @RequestParam (defaultValue = "10") Integer size) {
         return itemService.getItemsOfUser(ownerId, from, size);
@@ -56,7 +57,7 @@ ItemController {
 
     @PostMapping("/{itemId}/comment")
     public CommentDto createComment(@PathVariable long itemId, @RequestBody CommentDto commentDto,
-                                    @RequestHeader(value = "X-Sharer-User-Id", defaultValue = "0") long userId) {
+                                    @RequestHeader(value = userIdHeader, defaultValue = "0") long userId) {
         return itemService.createComment(itemId, userId, commentDto);
     }
 }

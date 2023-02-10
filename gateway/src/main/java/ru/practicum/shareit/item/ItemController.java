@@ -16,16 +16,17 @@ import javax.validation.constraints.PositiveOrZero;
 @RequestMapping("/items")
 public class ItemController {
 
-    ItemClient itemClient;
+    final private ItemClient itemClient;
+    final String userIdHeader = "X-Sharer-User-Id";
 
     @PostMapping
-    public ResponseEntity<Object> createItem(@RequestHeader("X-Sharer-User-Id") long userId,
+    public ResponseEntity<Object> createItem(@RequestHeader(userIdHeader) long userId,
                                              @RequestBody @Valid ItemDto itemDto) {
         return itemClient.createItem(userId, itemDto);
     }
 
     @PatchMapping("/{itemId}")
-    public ResponseEntity<Object> updateItem(@RequestHeader("X-Sharer-User-Id") long userId,
+    public ResponseEntity<Object> updateItem(@RequestHeader(userIdHeader) long userId,
                                              @PathVariable long itemId,
                                              @RequestBody ItemDto itemDto) {
         return itemClient.updateItem(userId, itemId, itemDto);
@@ -33,12 +34,12 @@ public class ItemController {
 
     @GetMapping("/{itemId}")
     public ResponseEntity<Object> getItemById(@PathVariable long itemId,
-                                              @RequestHeader("X-Sharer-User-Id") long userId) {
+                                              @RequestHeader(userIdHeader) long userId) {
         return itemClient.getItemById(itemId, userId);
     }
 
     @GetMapping
-    public ResponseEntity<Object> getItems(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public ResponseEntity<Object> getItems(@RequestHeader(userIdHeader) long userId) {
         return itemClient.getItems(userId);
     }
 
@@ -51,7 +52,7 @@ public class ItemController {
 
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<Object> createComment(@PathVariable long itemId, @RequestBody @Valid CommentDto commentDto,
-                                                @RequestHeader("X-Sharer-User-Id") long userId) {
+                                                @RequestHeader(userIdHeader) long userId) {
         return itemClient.createComment(itemId, commentDto, userId);
     }
 }

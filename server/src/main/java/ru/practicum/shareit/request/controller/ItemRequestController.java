@@ -15,15 +15,16 @@ import java.util.List;
 public class ItemRequestController {
 
     private final ItemRequestService itemRequestService;
+    final String userIdHeader = "X-Sharer-User-Id";
 
     @PostMapping
     public ItemRequestDto createItemRequest(@RequestBody @Valid ItemRequestDto itemRequestDto,
-                                            @RequestHeader("X-Sharer-User-Id") long requestorId) {
+                                            @RequestHeader(userIdHeader) long requestorId) {
         return itemRequestService.createItemRequest(itemRequestDto, requestorId);
     }
 
     @GetMapping
-    public List<ItemRequestDtoWithItems> getItemRequestWithAnswers(@RequestHeader(value = "X-Sharer-User-Id",
+    public List<ItemRequestDtoWithItems> getItemRequestWithAnswers(@RequestHeader(value = userIdHeader,
                                             defaultValue = "0") long requestorId) {
         return itemRequestService.getItemRequestWithAnswers(requestorId);
     }
@@ -31,12 +32,12 @@ public class ItemRequestController {
     @GetMapping("/all")
     public List<ItemRequestDtoWithItems> getAllItemRequest(@RequestParam(value = "from", defaultValue = "0") int from,
                                                            @RequestParam(value = "size", defaultValue = "20") int size,
-                                                           @RequestHeader("X-Sharer-User-Id") long userId) {
+                                                           @RequestHeader(userIdHeader) long userId) {
         return itemRequestService.getAllItemRequest(from, size, userId);
     }
 
     @GetMapping("/{requestId}")
-    public ItemRequestDtoWithItems getRequestById(@RequestHeader("X-Sharer-User-Id") long userId,
+    public ItemRequestDtoWithItems getRequestById(@RequestHeader(userIdHeader) long userId,
                                                   @PathVariable long requestId) {
         return itemRequestService.getRequestById(userId, requestId);
     }

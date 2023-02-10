@@ -9,10 +9,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoBooking;
+import ru.practicum.shareit.item.mappers.CommentMapper;
 import ru.practicum.shareit.item.mappers.ItemMapper;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
@@ -24,6 +29,7 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -167,12 +173,12 @@ class ItemServiceTest {
         verify(itemRepository, times(1)).findAll();
     }
 
-    /*@Test
+    @Test
     void createComment() {
         User user2 = item.getRequest().getRequestor();
         Booking booking = Booking.builder()
                 .id(1L)
-                .status(BookingStatus.WAITING)
+                .status(BookingStatus.APPROVED)
                 .item(item)
                 .booker(user2)
                 .start(LocalDateTime.of(2000, 1, 1, 0, 0, 0))
@@ -188,8 +194,7 @@ class ItemServiceTest {
         List<Booking> bookingsList = new ArrayList<>();
         bookingsList.add(booking);
 
-        when(bookingRepository
-                .findBookingsByItemIdAndBookerId(anyLong(), anyLong()))
+        when(bookingRepository.findBookingsByItemIdAndBookerId(anyLong(), anyLong()))
                 .thenReturn(bookingsList);
         when(itemRepository.findById(anyLong())).thenReturn(Optional.of(item));
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
@@ -203,5 +208,5 @@ class ItemServiceTest {
         assertEquals(comment.getId(), commentDto.getId());
 
         verify(commentRepository, times(1)).save(any());
-    }*/
+    }
 }

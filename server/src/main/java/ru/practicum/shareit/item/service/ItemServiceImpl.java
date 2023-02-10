@@ -32,6 +32,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -170,13 +171,12 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Предмет не найден"));
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         Comment comment = CommentMapper.toComment(commentDto);
-        LocalDateTime a = LocalDateTime.now();
-        List<Booking> bookingList = bookingRepository.findBookingsByItemIdAndBookerId(itemId, userId)
+        Optional<Booking> bookingOptional = bookingRepository.findBookingsByItemIdAndBookerId(itemId, userId)
                 .stream()
                 .filter(booking -> booking.getStatus().equals(BookingStatus.APPROVED))
                 .filter(booking -> booking.getStart().isBefore(LocalDateTime.now()))
-                .collect(Collectors.toList());
-        if (bookingList.isEmpty()) {
+                .findAny();
+        if (bookingOptional.isEmpty()) {
             throw new ValidationException("Вы не бронировали данную вещь или бронь еще не завершилась");
         } else {
             comment.setCreated(LocalDateTime.now());

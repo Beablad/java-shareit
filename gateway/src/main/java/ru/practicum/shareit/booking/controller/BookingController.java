@@ -22,9 +22,10 @@ import javax.validation.constraints.PositiveOrZero;
 public class BookingController {
 
     private final BookingClient bookingClient;
+    final String userIdHeader = "X-Sharer-User-Id";
 
     @PostMapping
-    public ResponseEntity<Object> createBooking(@RequestHeader("X-Sharer-User-Id") long userId,
+    public ResponseEntity<Object> createBooking(@RequestHeader(userIdHeader) long userId,
                                                 @RequestBody @Valid BookingRequestDto bookingRequestDto) {
         if (bookingRequestDto.getStart().isAfter(bookingRequestDto.getEnd())) {
             throw new ValidationException("Время окончания не может быть больше времени начала");
@@ -36,19 +37,19 @@ public class BookingController {
     @PatchMapping("/{bookingId}")
     public ResponseEntity<Object> approveBooking(@PathVariable Long bookingId,
                                                  @RequestParam Boolean approved,
-                                                 @RequestHeader(name = "X-Sharer-User-Id") Long userId) {
+                                                 @RequestHeader(name = userIdHeader) Long userId) {
         return bookingClient.approveBooking(bookingId, approved, userId);
     }
 
     @GetMapping("/{bookingId}")
     public ResponseEntity<Object> getBooking(@PathVariable long bookingId,
-                                             @RequestHeader(name = "X-Sharer-User-Id") long userId) {
+                                             @RequestHeader(name = userIdHeader) long userId) {
         return bookingClient.getBooking(userId, bookingId);
     }
 
     @GetMapping
     public ResponseEntity<Object> getBookingsOfUser(@RequestParam(defaultValue = "ALL") String state,
-                                                    @RequestHeader(name = "X-Sharer-User-Id", defaultValue = "0") long userId,
+                                                    @RequestHeader(name = userIdHeader, defaultValue = "0") long userId,
                                                     @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                                     @RequestParam(defaultValue = "20") @Positive int size) {
         return bookingClient.getBookingsOfUser(state, userId, from, size);
@@ -56,7 +57,7 @@ public class BookingController {
 
     @GetMapping("/owner")
     public ResponseEntity<Object> getBookingsByOwner(@RequestParam(defaultValue = "ALL") String state,
-                                                     @RequestHeader(name = "X-Sharer-User-Id", defaultValue = "0") long userId,
+                                                     @RequestHeader(name = userIdHeader, defaultValue = "0") long userId,
                                                      @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                                      @RequestParam(defaultValue = "20") @Positive int size) {
         return bookingClient.getBookingsByOwner(state, userId, from, size);
