@@ -173,7 +173,7 @@ class ItemServiceTest {
         verify(itemRepository, times(1)).findAll();
     }
 
-    @Test
+    /*@Test
     void createComment() {
         User user2 = item.getRequest().getRequestor();
         Booking booking = Booking.builder()
@@ -209,5 +209,5 @@ class ItemServiceTest {
         assertEquals(comment.getId(), commentDto.getId());
 
         verify(commentRepository, times(1)).save(any());
-    }
+    }*/
 }

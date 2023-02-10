@@ -2,7 +2,6 @@ package ru.practicum.shareit.user;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -35,7 +34,7 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public ResponseEntity<Object> updateUser(@PathVariable long userId, @RequestBody @Valid UserDto userDto) {
+    public ResponseEntity<Object> updateUser(@PathVariable long userId, @RequestBody UserDto userDto) {
         return userClient.updateUser(userId, userDto);
     }
 

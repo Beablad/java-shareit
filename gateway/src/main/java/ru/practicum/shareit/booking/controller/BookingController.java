@@ -15,7 +15,7 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
 @Controller
-@RequestMapping("/booking")
+@RequestMapping("/bookings")
 @Slf4j
 @Validated
 @RequiredArgsConstructor
@@ -33,9 +33,16 @@ public class BookingController {
         return bookingClient.createBooking(userId, bookingRequestDto);
     }
 
-    @GetMapping("/bookingId")
+    @PatchMapping("/{bookingId}")
+    public ResponseEntity<Object> approveBooking(@PathVariable Long bookingId,
+                                                 @RequestParam Boolean approved,
+                                                 @RequestHeader(name = "X-Sharer-User-Id") Long userId) {
+        return bookingClient.approveBooking(bookingId, approved, userId);
+    }
+
+    @GetMapping("/{bookingId}")
     public ResponseEntity<Object> getBooking(@PathVariable long bookingId,
-                                             @RequestHeader(name = "X-Sharer-User-Id", defaultValue = "0") long userId) {
+                                             @RequestHeader(name = "X-Sharer-User-Id") long userId) {
         return bookingClient.getBooking(userId, bookingId);
     }
 

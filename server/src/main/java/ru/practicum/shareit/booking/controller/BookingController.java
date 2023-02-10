@@ -3,14 +3,11 @@ package ru.practicum.shareit.booking.controller;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoShort;
 import ru.practicum.shareit.booking.service.BookingService;
 
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,7 +26,7 @@ public class BookingController {
     }
 
     @PatchMapping("/{bookingId}")
-    public BookingDto approveBooking(@PathVariable long bookingId, @Param("approved") Boolean approved,
+    public BookingDto approveBooking(@PathVariable long bookingId, @RequestParam Boolean approved,
                                      @RequestHeader(name = "X-Sharer-User-Id", defaultValue = "0") long ownerId) {
         return bookingService.approveBooking(bookingId, approved, ownerId);
     }

@@ -22,6 +22,7 @@ import ru.practicum.shareit.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -47,7 +48,7 @@ public class BookingServiceImpl implements BookingService {
 
         booking.setBooker(userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь с таким id не найден")));
-
+        Optional<Item> itemOptional = itemRepository.findById(bookingDtoShort.getItemId());
         Item item = itemRepository.findById(bookingDtoShort.getItemId())
                 .orElseThrow(() -> new NotFoundException("Неверный идентификатор вещи"));
 
@@ -101,6 +102,7 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingDto> getBookingsOfUser(String state, long userId, Integer from, Integer size) {
         int page = from / size;
         Pageable pageable = PageRequest.of(page, size);
+
         userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         List<BookingDto> bookingList = bookingRepository.findByBookerIdOrderByStartDesc(userId, pageable).stream()
                 .map(BookingMapper::toBookingDto).collect(Collectors.toList());
@@ -139,7 +141,6 @@ public class BookingServiceImpl implements BookingService {
         if (bookingList.isEmpty()) {
             throw new NotFoundException("У пользователя нет вещей");
         }
-
         switch (BookingState.valueOf(state)) {
             case ALL:
                 bookingList.sort(Comparator.comparing(BookingDto::getStart).reversed());

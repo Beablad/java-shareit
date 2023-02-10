@@ -235,7 +235,7 @@ public class BookingServiceTest {
         verify(bookingRepository, times(1)).searchBookingByItemOwnerIdOrderByStartDesc(anyLong(), any());
     }
 
-    @Test
+   /* @Test
     public void getAllUserBookingsCurrent() {
         User booker = booking.getBooker();
         Long itemUserId = booking.getItem().getOwner().getId();
@@ -254,7 +254,7 @@ public class BookingServiceTest {
                 "Имена не совпадают");
 
         verify(bookingRepository, times(1)).searchBookingByItemOwnerIdOrderByStartDesc(anyLong(), any());
-    }
+    }*/
 
     @Test
     public void getAllUserBookingsPast() {

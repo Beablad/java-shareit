@@ -7,6 +7,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 @Controller
 @AllArgsConstructor
@@ -29,14 +31,14 @@ public class ItemRequestController {
 
     @GetMapping("/all")
     public ResponseEntity<Object> getAllItemRequest(@RequestHeader("X-Sharer-User-Id") long requestorId,
-                                                    @RequestParam (defaultValue = "0") int from,
-                                                    @RequestParam (defaultValue = "20") int size) {
+                                                    @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                                    @RequestParam(defaultValue = "20") @Positive int size) {
         return itemRequestClient.getAllItemRequest(requestorId, from, size);
     }
 
     @GetMapping("/{requestId}")
     public ResponseEntity<Object> getRequestById(@PathVariable long requestId,
                                                  @RequestHeader("X-Sharer-User-Id") long requestorId) {
-        return itemRequestClient.getItemRequestById(requestId, requestId);
+        return itemRequestClient.getItemRequestById(requestorId, requestId);
     }
 }

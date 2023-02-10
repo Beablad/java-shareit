@@ -31,11 +31,11 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> updateItem(long userId, long itemId, ItemDto itemDto) {
-        return patch("" + itemId, userId, itemDto);
+        return patch("/" + itemId, userId, itemDto);
     }
 
     public ResponseEntity<Object> getItemById(long itemId, long userId) {
-        return get("" + itemId, userId);
+        return get("/" + itemId, userId);
     }
 
     public ResponseEntity<Object> getItems(long userId) {
@@ -43,13 +43,14 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> searchItem(String text, int from, int size) {
-        Map<String, Object> parameters = Map.of("from", from,
-                "size", size,
-                "text", text);
-        return get("/search", null, parameters);
+        Map<String, Object> parameters = Map.of(
+                "text", text,
+                "from", from,
+                "size", size);
+        return get("/search?text={text}&from={from}&size={size}", null, parameters);
     }
 
     public ResponseEntity<Object> createComment(long itemId, CommentDto commentDto, long userId) {
-        return post("" + itemId + "/comment", userId, commentDto);
+        return post("/" + itemId + "/comment", userId, commentDto);
     }
 }

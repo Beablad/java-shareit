@@ -3,6 +3,7 @@ package ru.practicum.shareit.user.service;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.ConflictException;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     UserRepository userRepository;
@@ -40,6 +42,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(long userId, UserDto userDto) {
+
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         if (!user.getName().equals(userDto.getName()) && userDto.getName() != null) {
             user.setName(userDto.getName());
@@ -51,6 +54,7 @@ public class UserServiceImpl implements UserService {
             user.setEmail(userDto.getEmail());
         }
         userRepository.save(user);
+        log.info("Пользователь сохранен");
         return UserMapper.toUserDto(user);
     }
 

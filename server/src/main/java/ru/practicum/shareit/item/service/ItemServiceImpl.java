@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDtoForItem;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.NoAccessException;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -169,8 +170,12 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Предмет не найден"));
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         Comment comment = CommentMapper.toComment(commentDto);
+        LocalDateTime a = LocalDateTime.now();
         List<Booking> bookingList = bookingRepository.findBookingsByItemIdAndBookerId(itemId, userId)
-                .stream().filter(booking -> booking.getEnd().isBefore(LocalDateTime.now())).collect(Collectors.toList());
+                .stream()
+                .filter(booking -> booking.getStatus().equals(BookingStatus.APPROVED))
+                .filter(booking -> booking.getStart().isBefore(LocalDateTime.now()))
+                .collect(Collectors.toList());
         if (bookingList.isEmpty()) {
             throw new ValidationException("Вы не бронировали данную вещь или бронь еще не завершилась");
         } else {
