@@ -5,7 +5,6 @@ services:
     image: shareit-gateway_image
     container_name: shareit-gateway_container
     ports:
-      - "8081:8081"
       - "8080:8080"
     depends_on:
       - server
@@ -17,7 +16,6 @@ services:
     image: shareit-server_image
     container_name: shareit-server_container
     ports:
-      - "9091:9091"
       - "9090:9090"
     depends_on:
       - db
