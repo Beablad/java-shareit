@@ -16,7 +16,7 @@ import javax.validation.constraints.PositiveOrZero;
 @Validated
 public class ItemRequestController {
 
-    final private ItemRequestClient itemRequestClient;
+    private final ItemRequestClient itemRequestClient;
     final String userIdHeader = "X-Sharer-User-Id";
 
     @PostMapping

@@ -16,8 +16,8 @@ import javax.validation.constraints.PositiveOrZero;
 @RequestMapping("/items")
 public class ItemController {
 
-    final private ItemClient itemClient;
-    final String userIdHeader = "X-Sharer-User-Id";
+    private final ItemClient itemClient;
+    private final String userIdHeader = "X-Sharer-User-Id";
 
     @PostMapping
     public ResponseEntity<Object> createItem(@RequestHeader(userIdHeader) long userId,
